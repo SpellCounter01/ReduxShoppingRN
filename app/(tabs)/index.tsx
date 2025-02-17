@@ -45,8 +45,12 @@ export default function HomeScreen() {
         contentContainerStyle={{
           gap: 24,
           padding: 24,
+          paddingTop: 0,
           columnGap: 12,
         }}
+        overScrollMode="never"
+        bounces={false}
+        showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ gap: 10 }}
         data={products.filtered}
         renderItem={({ item }) => <ProductCard item={item} />}
@@ -78,7 +82,14 @@ const emptyComponent = () => {
   );
 };
 
-const getNumColumns = () => (Dimensions.get("screen").width >= 1000 ? 4 : 2);
+const getNumColumns = () => {
+  const division = Dimensions.get("screen").width / 1000;
+
+  if (division >= 1.2)
+    return 4
+  else if (division >= 0.8) return 3
+  else return 2
+}
 
 //const HeaderComponent = ({ handleCategory, handleCategory2 }: { handleCategory: () => void, handleCategory2: () => void }) => (
 //  <ThemedView style={{ height: 48, backgroundColor: '#121233', marginHorizontal: -24, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>

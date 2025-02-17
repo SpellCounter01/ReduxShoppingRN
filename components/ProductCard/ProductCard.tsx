@@ -42,9 +42,11 @@ const ProductCard = ({ item }: { item: Product }) => {
           source={{ uri: item.thumbnail }}
           resizeMode="contain"
         />
-        <ThemedText lightColor={colors.text.light} darkColor={colors.text.dark} style={styles.discountText}>
-          {item.discountPercentage}%
-        </ThemedText>
+        {item.discountPercentage &&
+          <ThemedText lightColor={colors.text.light} darkColor={colors.text.dark} style={styles.discountText}>
+            {item.discountPercentage}%
+          </ThemedText>
+        }
       </View>
       <ThemedView
         style={{ flex: 1, gap: 10 }}
