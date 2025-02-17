@@ -1,9 +1,11 @@
 import React, { memo } from 'react'
-import { ThemedView } from '../ThemedView'
 import { useTheme } from '@react-navigation/native'
 import OptionButton from './OptionButton'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store'
+import BackDrop from '../BackDrop'
+import { setExpandedFilterIndex } from '@/store/filter/filtersSlice'
+import { View } from 'react-native'
 
 type FiterName = 'Category' | 'Price' | 'Discount'
 
@@ -12,7 +14,7 @@ export interface FilterInterface {
   name: FiterName
 }
 
-const Filters: Array<filters> = [
+const Filters: Array<FilterInterface> = [
   {
     id: 1,
     name: 'Category'
@@ -29,6 +31,7 @@ const Filters: Array<filters> = [
 const ProductFiltersHeader = () => {
   const theme = useTheme();
   const FilterState = useSelector((state: RootState) => state)
+  const dispatch = useDispatch()
 
   console.log(
     'test'
@@ -36,9 +39,10 @@ const ProductFiltersHeader = () => {
 
 
   return (
-    <ThemedView style={{ flex: 1, marginHorizontal: -24, backgroundColor: theme.colors.background, padding: 24, justifyContent: "space-between", flexDirection: "row" }}>
+    <View style={{ marginHorizontal: -24, backgroundColor: theme.colors.background, flexDirection: "row", padding: 24 }}>
       {Filters.map((item) => <OptionButton key={item.id} item={item} active={item.id === FilterState.filter.expandedFilterIndex} />)}
-    </ThemedView >
+      <BackDrop active={!!FilterState.filter?.expandedFilterIndex} dispatch={() => dispatch(setExpandedFilterIndex(undefined))} />
+    </View>
   )
 }
 
