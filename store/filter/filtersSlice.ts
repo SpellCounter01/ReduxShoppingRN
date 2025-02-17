@@ -10,24 +10,30 @@ interface Filters {
   discount: boolean
 }
 
-interface InitialState {
+export interface FilterStateInterface {
   selectedFilters: Partial<Filters>,
-  expandedFilter?: number,
+  expandedFilterIndex?: number
 }
 
-const initialState: InitialState = {
+const initialState: FilterStateInterface = {
   selectedFilters: {
     categories: [],
   },
-  expandedFilter: undefined
+  expandedFilterIndex: undefined
 }
 
-export default createSlice({
+export const filterSlice = createSlice({
   name: 'filters',
   initialState: initialState,
   reducers: {
     toggleCategory: (state, action: PayloadAction<Array<number>>) => {
       state.selectedFilters.categories = action.payload
+    },
+    setExpandedFilterIndex: (state, action: PayloadAction<number | undefined>) => {
+      state.expandedFilterIndex = action.payload
     }
   }
 })
+
+export const { toggleCategory, setExpandedFilterIndex } = filterSlice.actions
+export default filterSlice.reducer

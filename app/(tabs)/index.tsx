@@ -3,11 +3,10 @@ import ProductFiltersHeader from "@/components/ProductFiltersHeader";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Product } from "@/interfaces/product";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
-  TouchableOpacity,
   Dimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -81,16 +80,16 @@ const emptyComponent = () => {
 
 const getNumColumns = () => (Dimensions.get("screen").width >= 1000 ? 4 : 2);
 
-const HeaderComponent = ({ handleCategory, handleCategory2 }: { handleCategory: () => void, handleCategory2: () => void }) => (
-  <ThemedView style={{ height: 48, backgroundColor: '#121233', marginHorizontal: -24, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-    <TouchableOpacity onPress={handleCategory}>
-      <ThemedText>Category</ThemedText>
-    </TouchableOpacity>
-    <TouchableOpacity onPress={handleCategory2}>
-      <ThemedText>Category</ThemedText>
-    </TouchableOpacity>
-    <TouchableOpacity>
-      <ThemedText>Category</ThemedText>
-    </TouchableOpacity>
-  </ThemedView>
-);
+//const HeaderComponent = ({ handleCategory, handleCategory2 }: { handleCategory: () => void, handleCategory2: () => void }) => (
+//  <ThemedView style={{ height: 48, backgroundColor: '#121233', marginHorizontal: -24, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+//    <TouchableOpacity onPress={handleCategory}>
+//      <ThemedText>Category</ThemedText>
+//    </TouchableOpacity>
+//    <TouchableOpacity onPress={handleCategory2}>
+//      <ThemedText>Category</ThemedText>
+//    </TouchableOpacity>
+//    <TouchableOpacity>
+//      <ThemedText>Category</ThemedText>
+//    </TouchableOpacity>
+//  </ThemedView>
+//);

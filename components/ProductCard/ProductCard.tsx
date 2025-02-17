@@ -1,4 +1,4 @@
-import { Image, useColorScheme, View, StyleSheet, Dimensions, ViewStyle, TextStyle, SafeAreaView } from "react-native";
+import { Image, useColorScheme, View, StyleSheet, Dimensions, ViewStyle, TextStyle } from "react-native";
 import React, { memo, useMemo, useRef } from "react";
 import { Product } from "@/interfaces/product";
 import { ThemedView } from "../ThemedView";
@@ -18,8 +18,6 @@ const ProductCard = ({ item }: { item: Product }) => {
       dark: theme !== "dark" ? "#000000" : "#ffffff",
     },
   };
-  console.log(item.id);
-
 
   const cachedMediaQueries = useRef<{ [key: string]: { [key: string]: ViewStyle | TextStyle } }>({});
 

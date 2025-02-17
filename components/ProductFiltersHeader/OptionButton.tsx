@@ -1,18 +1,21 @@
 import { TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { memo } from 'react'
 import { ThemedText } from '../ThemedText'
+import { useDispatch } from 'react-redux'
+import { setExpandedFilterIndex } from '@/store/filter/filtersSlice'
+import { FilterInterface } from '.'
 
-const OptionButton = ({ text }: { text: string }) => {
-  const [overflow, setOverflow] = useState<"hidden" | "visible" | "scroll" | undefined>('hidden')
+const OptionButton = ({ item, active }: { item: FilterInterface, active: boolean }) => {
+  const dispatch = useDispatch()
 
   return (
-    <TouchableOpacity style={{ flex: 1, alignItems: 'center', overflow: overflow }}
-      onPress={() => setOverflow(overflow == 'hidden' ? 'visible' : 'hidden')}>
-      <ThemedText>{text}</ThemedText>
+    <TouchableOpacity style={{ flex: 1, alignItems: 'center', overflow: active ? 'visible' : 'hidden' }}
+      onPress={() => dispatch(setExpandedFilterIndex(item.id))}>
+      <ThemedText>{item.name}</ThemedText>
       <View style={{ position: 'absolute', backgroundColor: 'red', width: 100, height: 100, top: 20 }}>
-      </View >
+      </View>
     </TouchableOpacity>
   )
 }
 
-export default OptionButton
+export default memo(OptionButton)
