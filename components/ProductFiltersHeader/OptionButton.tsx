@@ -23,7 +23,7 @@ const OptionButton = ({ item, active, style }: Props) => {
         <ThemedText style={{ textAlign: 'center' }}>{item.name}</ThemedText>
       </TouchableOpacity>
       {active && <View style={{ position: 'absolute', backgroundColor: 'red', width: 100, height: 100, top: 20 }} />}
-    </View >
+    </View>
   )
 }
 
