@@ -57,12 +57,12 @@ const ProductCard = ({ item }: { item: Product }) => {
           style={{ fontSize: 18, flex: 1 }}>
           {item.title}
         </ThemedText>
-        <ThemedView style={[styles.subInfoContainer, mediaQueries.subInfoContainer as ViewStyle]}>
-          <ThemedText style={{ flex: 1 }} lightColor={colors.text.light} darkColor={colors.text.dark}>
+        <View style={[styles.subInfoContainer, mediaQueries.subInfoContainer as ViewStyle]}>
+          <ThemedText style={{ flex: 1, fontSize: 14 }} lightColor={colors.text.light} darkColor={colors.text.dark}>
             {item.price}€
           </ThemedText>
           <StarRating count={item.reviews.length} rating={item.rating} />
-        </ThemedView>
+        </View>
       </ThemedView>
     </ThemedView>
   );
