@@ -35,44 +35,36 @@ const ProductCard = ({ item }: { item: Product }) => {
       style={styles.container}
       lightColor={colors.background.light}
       darkColor={colors.background.dark}
-      key={item.id}
-    >
-      <Image
-        style={styles.image}
-        source={{ uri: item.thumbnail }}
-        resizeMode="contain"
-      />
+      key={item.id}>
+      <View>
+        <Image
+          style={styles.image}
+          source={{ uri: item.thumbnail }}
+          resizeMode="contain"
+        />
+        <ThemedText lightColor={colors.text.light} darkColor={colors.text.dark} style={styles.discountText}>
+          {item.discountPercentage}%
+        </ThemedText>
+      </View>
       <ThemedView
         style={{ flex: 1, gap: 10 }}
         lightColor={colors.background.light}
-        darkColor={colors.background.dark}
-      >
+        darkColor={colors.background.dark}>
         <ThemedText
           lightColor={colors.text.light}
           darkColor={colors.text.dark}
-          type="title"
-          style={[{ fontSize: 24, flex: 1 }]}>
+          type="subtitle"
+          style={{ fontSize: 18, flex: 1 }}>
           {item.title}
         </ThemedText>
-        <View style={{ flex: 1 }}>
-          <View style={styles.infoContainer}>
-            <View style={[styles.subInfoContainer, mediaQueries.subInfoContainer as ViewStyle]}>
-              <View style={{ flexDirection: 'row', flex: 1, gap: 8 }}>
-                <ThemedText lightColor={colors.text.light} darkColor={colors.text.dark}>
-                  {item.price}€
-                </ThemedText>
-                <View>
-                  <ThemedText lightColor={colors.text.light} darkColor={colors.text.dark} style={styles.discountText}>
-                    {item.discountPercentage}%
-                  </ThemedText>
-                </View>
-              </View>
-              <StarRating count={item.reviews.length} rating={item.rating} />
-            </View>
-          </View>
-        </View>
+        <ThemedView style={[styles.subInfoContainer, mediaQueries.subInfoContainer as ViewStyle]}>
+          <ThemedText style={{ flex: 1 }} lightColor={colors.text.light} darkColor={colors.text.dark}>
+            {item.price}€
+          </ThemedText>
+          <StarRating count={item.reviews.length} rating={item.rating} />
+        </ThemedView>
       </ThemedView>
-    </ThemedView >
+    </ThemedView>
   );
 };
 
@@ -89,6 +81,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     paddingHorizontal: 8,
     borderRadius: 4,
+    position: 'absolute', top: 0, right: 0
   },
   infoContainer: {
     flexDirection: "row",
