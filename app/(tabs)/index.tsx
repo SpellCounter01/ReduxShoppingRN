@@ -8,6 +8,7 @@ import {
   FlatList,
   Image,
   Dimensions,
+  ScaledSize,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -17,7 +18,7 @@ interface ProductResponse {
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<{ all: Product[], filtered: Product[] }>({ all: [], filtered: [] });
-  const [numColumns, setNumColumns] = useState(getNumColumns());
+  const [numColumns, setNumColumns] = useState(getNumColumns(Dimensions.get('window')));
   const insets = useSafeAreaInsets()
 
   useEffect(() => {
@@ -29,8 +30,7 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
-    const updateColumns = () => setNumColumns(getNumColumns());
-    const subscription = Dimensions.addEventListener("change", updateColumns);
+    const subscription = Dimensions.addEventListener("change", (size) => setNumColumns(getNumColumns(size.window)));
 
     return () => subscription.remove();
   }, []);
@@ -82,8 +82,8 @@ const emptyComponent = () => {
   );
 };
 
-const getNumColumns = () => {
-  const division = Dimensions.get("screen").width / 1000;
+const getNumColumns = (result: ScaledSize) => {
+  const division = result.width / 1000;
 
   if (division >= 1.2)
     return 4

@@ -2,10 +2,10 @@ import React, { memo, useEffect } from 'react'
 import { useTheme } from '@react-navigation/native'
 import OptionButton from './OptionButton'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/store'
+import { AppDispatch, RootState } from '@/store'
 import BackDrop from '../BackDrop'
-import { setExpandedFilterIndex } from '@/store/filter/filtersSlice'
 import { View } from 'react-native'
+import { fetchCategories, setExpandedFilterIndex } from '@/store/filter/filtersSlice'
 
 type FiterName = 'Category' | 'Price' | 'Discount'
 
@@ -31,11 +31,10 @@ const Filters: Array<FilterInterface> = [
 const ProductFiltersHeader = () => {
   const theme = useTheme();
   const FilterState = useSelector((state: RootState) => state.filter)
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    fetch('https://dummyjson.com/products/categories').then(res => res.json().then())
+    dispatch(fetchCategories())
   }, [])
 
   return (

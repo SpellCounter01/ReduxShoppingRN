@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { setExpandedFilterIndex } from '@/store/filter/filtersSlice'
 import { FilterInterface } from '.'
 import { ThemedText } from '../ThemedText'
+import { AppDispatch } from '@/store'
 
 interface Props extends TouchableOpacityProps {
   item: FilterInterface,
@@ -12,8 +13,7 @@ interface Props extends TouchableOpacityProps {
 
 
 const OptionButton = ({ item, active, style }: Props) => {
-  const dispatch = useDispatch()
-  console.log(active, item.id);
+  const dispatch = useDispatch<AppDispatch>()
 
   return (
     <View style={{ flex: 1, overflow: 'visible', zIndex: 1 }}>
