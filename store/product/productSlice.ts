@@ -6,20 +6,30 @@ import { PaginatedResponse } from "@/interfaces/paginatedResponse";
 interface ProductSliceInterface {
   products: Array<Product> | undefined;
   loading: boolean;
+  currentPage: number;
+  hasNext: boolean;
 }
+
+const pageSize = 10;
 
 export const fetchProducts = createAsyncThunk.withTypes<{
   state: RootState;
   dispatch: AppDispatch;
-}>()("products/fetch", async () => {
-  return await fetch("https://dummyjson.com/products").then((e) =>
-    e.json().then((response: PaginatedResponse<Product>) => response),
-  );
-});
+}>()(
+  "products/fetch",
+  async (page: number) =>
+    await fetch(
+      `https://dummyjson.com/products?limit=${pageSize}&skip=${page * pageSize}&sortBy=id&order=asc`,
+    ).then((e) =>
+      e.json().then((response: PaginatedResponse<Product>) => response),
+    ),
+);
 
 const initialState: ProductSliceInterface = {
   products: undefined,
   loading: false,
+  currentPage: 1,
+  hasNext: true,
 };
 
 const productSlice = createSlice({
@@ -30,9 +40,15 @@ const productSlice = createSlice({
     builder.addCase(
       fetchProducts.fulfilled,
       (state, action: PayloadAction<PaginatedResponse<Product>>) => {
-        state.products = action.payload.products;
+        if (state.products?.length) {
+          state.products = state.products.concat(action.payload.products);
+          state.currentPage++;
+        } else {
+          state.products = action.payload.products;
+        }
+
         state.loading = false;
-        console.log(action.payload);
+        state.hasNext = action.payload.total > action.payload.skip + pageSize;
       },
     );
     builder.addCase(fetchProducts.pending, (state) => {

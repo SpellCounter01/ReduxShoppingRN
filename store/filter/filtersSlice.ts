@@ -26,11 +26,13 @@ const initialState: FilterStateInterface = {
 export const fetchCategories = createAsyncThunk.withTypes<{
   state: RootState;
   dispatch: AppDispatch;
-}>()("fetchProduct/categories", async () => {
-  return await fetch("https://dummyjson.com/products/categories").then((e) =>
-    e.json().then((response: Array<Category>) => response),
-  );
-});
+}>()(
+  "fetchProduct/categories",
+  async () =>
+    await fetch("https://dummyjson.com/products/categories").then((e) =>
+      e.json().then((response: Array<Category>) => response),
+    ),
+);
 
 export const filterSlice = createSlice({
   name: "filters",

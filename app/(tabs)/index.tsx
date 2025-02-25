@@ -21,11 +21,12 @@ export default function HomeScreen() {
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    dispatch(fetchProducts())
+    dispatch(fetchProducts(0))
   }, []);
 
   useEffect(() => {
     const subscription = Dimensions.addEventListener("change", (size) => setNumColumns(getNumColumns(size.window)));
+
     return () => subscription.remove();
   }, []);
 
@@ -47,10 +48,11 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ gap: 10 }}
         data={productSlice.products}
-        extraData={productSlice.products?.length}
         renderItem={({ item }) => <ProductCard item={item} />}
         ListEmptyComponent={emptyComponent}
         keyExtractor={(item) => item.id.toString()}
+        onEndReachedThreshold={1}
+        onEndReached={() => productSlice.hasNext && !productSlice.loading ? dispatch(fetchProducts(productSlice.currentPage + 1)) : null}
       />
     </ThemedView>
   );
