@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import FilterReducer from "./filter/filtersSlice";
+import ProductReducer from "./product/productSlice";
 import { apiSlice } from "./api";
 
 export const store = () =>
   configureStore({
     reducer: {
-      //product: productReducer,
+      product: ProductReducer,
       filter: FilterReducer,
       [apiSlice.reducerPath]: apiSlice.reducer,
     },

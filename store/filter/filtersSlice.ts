@@ -1,21 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "..";
-
-export interface Category {
-  slug: string;
-  name: string;
-  url: string;
-}
-
-interface Filters {
-  categories: Array<number>;
-  name?: string;
-  price?: {
-    floor: number;
-    cieling: number;
-  };
-  discount: boolean;
-}
+import { Category } from "@/interfaces/category";
+import { Filters } from "@/interfaces/filter";
 
 export interface FilterStateInterface {
   selectedFilters: Partial<Filters>;

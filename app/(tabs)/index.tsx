@@ -2,7 +2,8 @@ import ProductCard from "@/components/ProductCard/ProductCard";
 import ProductFiltersHeader from "@/components/ProductFiltersHeader";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Product } from "@/interfaces/product";
+import { AppDispatch, RootState } from "@/store";
+import { fetchProducts } from "@/store/product/productSlice";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -11,27 +12,20 @@ import {
   ScaledSize,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-interface ProductResponse {
-  products: Product[];
-}
+import { useDispatch, useSelector } from "react-redux";
 
 export default function HomeScreen() {
-  const [products, setProducts] = useState<{ all: Product[], filtered: Product[] }>({ all: [], filtered: [] });
   const [numColumns, setNumColumns] = useState(getNumColumns(Dimensions.get('window')));
   const insets = useSafeAreaInsets()
+  const productSlice = useSelector((state: RootState) => state.product)
+  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    fetch("https://dummyjson.com/products").then((response) =>
-      response
-        .json()
-        .then((json: ProductResponse) => setProducts({ all: json.products, filtered: json.products })),
-    );
+    dispatch(fetchProducts())
   }, []);
 
   useEffect(() => {
     const subscription = Dimensions.addEventListener("change", (size) => setNumColumns(getNumColumns(size.window)));
-
     return () => subscription.remove();
   }, []);
 
@@ -52,7 +46,8 @@ export default function HomeScreen() {
         bounces={false}
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ gap: 10 }}
-        data={products.filtered}
+        data={productSlice.products}
+        extraData={productSlice.products?.length}
         renderItem={({ item }) => <ProductCard item={item} />}
         ListEmptyComponent={emptyComponent}
         keyExtractor={(item) => item.id.toString()}
@@ -91,16 +86,3 @@ const getNumColumns = (result: ScaledSize) => {
   else return 2
 }
 
-//const HeaderComponent = ({ handleCategory, handleCategory2 }: { handleCategory: () => void, handleCategory2: () => void }) => (
-//  <ThemedView style={{ height: 48, backgroundColor: '#121233', marginHorizontal: -24, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-//    <TouchableOpacity onPress={handleCategory}>
-//      <ThemedText>Category</ThemedText>
-//    </TouchableOpacity>
-//    <TouchableOpacity onPress={handleCategory2}>
-//      <ThemedText>Category</ThemedText>
-//    </TouchableOpacity>
-//    <TouchableOpacity>
-//      <ThemedText>Category</ThemedText>
-//    </TouchableOpacity>
-//  </ThemedView>
-//);
