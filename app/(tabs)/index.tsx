@@ -5,11 +5,13 @@ import { ThemedView } from "@/components/ThemedView";
 import { AppDispatch, RootState } from "@/store";
 import { fetchProducts } from "@/store/product/productSlice";
 import React, { useEffect, useState } from "react";
+import { Product } from "@/interfaces/product";
 import {
   FlatList,
   Image,
   Dimensions,
   ScaledSize,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,9 +50,13 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ gap: 10 }}
         data={productSlice.products}
-        renderItem={({ item }) => <ProductCard item={item} />}
+        renderItem={({ item }) => {
+          if (!item.hidden)
+            return <ProductCard item={item as Product} />
+          else return <View style={{ flex: 1 }} />;
+        }}
         ListEmptyComponent={emptyComponent}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => (item?.id ?? 1).toString()}
         onEndReachedThreshold={1}
         onEndReached={() => productSlice.hasNext && !productSlice.loading ? dispatch(fetchProducts(productSlice.currentPage + 1)) : null}
       />
