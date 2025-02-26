@@ -3,7 +3,6 @@ import ProductFiltersHeader from "@/components/ProductFiltersHeader";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { AppDispatch, RootState } from "@/store";
-import { fetchProducts } from "@/store/product/productSlice";
 import React, { useCallback, useEffect, useState } from "react";
 import { Product } from "@/interfaces/product";
 import {
@@ -15,11 +14,12 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "@/store/product/productSlice";
 
 export default function HomeScreen() {
   const [numColumns, setNumColumns] = useState(getNumColumns(Dimensions.get('window')));
   const insets = useSafeAreaInsets()
-  const productSlice = useSelector((state: RootState) => state.product)
+  const { products, hasNext, currentPage, loading } = useSelector((state: RootState) => state.product)
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
@@ -32,18 +32,11 @@ export default function HomeScreen() {
     return () => subscription.remove();
   }, []);
 
-  const loadMoreProducts = useCallback(
-    () => {
-      if (productSlice.hasNext && !productSlice.loading) {
-        dispatch(fetchProducts(productSlice.currentPage + 1))
-      }
-      else {
-        return null
-      }
-    },
-    [productSlice.hasNext, productSlice.loading]
-  )
-
+  const loadMoreProducts = useCallback(() => {
+    if (hasNext && !loading) {
+      dispatch(fetchProducts(currentPage + 1));
+    }
+  }, [hasNext, dispatch, currentPage, loading]);
 
   return (
     <ThemedView style={{ flex: 1, paddingTop: insets.top }}>
@@ -62,7 +55,7 @@ export default function HomeScreen() {
         bounces={false}
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ gap: 10 }}
-        data={productSlice.products}
+        data={products}
         renderItem={({ item }) => {
           if (!item.hidden)
             return <ProductCard item={item as Product} />

@@ -44,7 +44,7 @@ const productSlice = createSlice({
       (state, action: PayloadAction<PaginatedResponse<Product>>) => {
         let productLength = 0;
         let missingNumber = 0;
-        const numColumns = getNumColumns(Dimensions.get("screen"));
+        const numColumns = getNumColumns(Dimensions.get("window"));
 
         if (state.products?.length) {
           productLength = state.products.filter(
@@ -52,7 +52,7 @@ const productSlice = createSlice({
           ).length;
           missingNumber = productLength % numColumns;
 
-          for (let index = 0; index <= missingNumber; index++) {
+          for (let index = 0; index < missingNumber; index++) {
             state.products.pop();
           }
 
@@ -63,10 +63,10 @@ const productSlice = createSlice({
         }
 
         productLength = state.products.length;
-        missingNumber = productLength % numColumns;
+        missingNumber = numColumns - (productLength % numColumns);
 
         if (missingNumber)
-          for (let index = 0; index <= missingNumber; index++) {
+          for (let index = 0; index < missingNumber; index++) {
             state.products.push({
               id: (state.products[productLength - 1].id ?? 1) + 1,
               hidden: true,
