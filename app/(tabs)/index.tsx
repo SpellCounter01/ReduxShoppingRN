@@ -34,18 +34,14 @@ export default function HomeScreen() {
 
   const loadMoreProducts = useCallback(
     () => {
-      console.log('test::', productSlice.currentPage);
-
       if (productSlice.hasNext && !productSlice.loading) {
         dispatch(fetchProducts(productSlice.currentPage + 1))
       }
       else {
-        console.log(productSlice.loading);
-
         return null
       }
     },
-    [productSlice]
+    [productSlice.hasNext, productSlice.loading]
   )
 
 
