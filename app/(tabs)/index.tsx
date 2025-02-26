@@ -4,7 +4,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { AppDispatch, RootState } from "@/store";
 import { fetchProducts } from "@/store/product/productSlice";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Product } from "@/interfaces/product";
 import {
   FlatList,
@@ -32,6 +32,23 @@ export default function HomeScreen() {
     return () => subscription.remove();
   }, []);
 
+  const loadMoreProducts = useCallback(
+    () => {
+      console.log('test::', productSlice.currentPage);
+
+      if (productSlice.hasNext && !productSlice.loading) {
+        dispatch(fetchProducts(productSlice.currentPage + 1))
+      }
+      else {
+        console.log(productSlice.loading);
+
+        return null
+      }
+    },
+    [productSlice]
+  )
+
+
   return (
     <ThemedView style={{ flex: 1, paddingTop: insets.top }}>
       <FlatList
@@ -58,7 +75,7 @@ export default function HomeScreen() {
         ListEmptyComponent={emptyComponent}
         keyExtractor={(item) => (item?.id ?? 1).toString()}
         onEndReachedThreshold={1}
-        onEndReached={() => productSlice.hasNext && !productSlice.loading ? dispatch(fetchProducts(productSlice.currentPage + 1)) : null}
+        onEndReached={loadMoreProducts}
       />
     </ThemedView>
   );
@@ -85,7 +102,7 @@ const emptyComponent = () => {
   );
 };
 
-const getNumColumns = (result: ScaledSize) => {
+export const getNumColumns = (result: ScaledSize) => {
   const division = result.width / 1000;
 
   if (division >= 1.2)

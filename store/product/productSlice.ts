@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "..";
 import { Product } from "@/interfaces/product";
 import { PaginatedResponse } from "@/interfaces/paginatedResponse";
+import { getNumColumns } from "@/app/(tabs)";
+import { Dimensions } from "react-native";
 
 interface ProductSliceInterface {
   products: Array<Product | Partial<Product>> | undefined;
@@ -42,14 +44,15 @@ const productSlice = createSlice({
       (state, action: PayloadAction<PaginatedResponse<Product>>) => {
         let productLength = 0;
         let missingNumber = 0;
+        const numColumns = getNumColumns(Dimensions.get("screen"));
 
         if (state.products?.length) {
           productLength = state.products.filter(
             (product) => product.hidden,
           ).length;
-          missingNumber = productLength % 4;
+          missingNumber = productLength % numColumns;
 
-          for (let index = 0; index < missingNumber; index++) {
+          for (let index = 0; index <= missingNumber; index++) {
             state.products.pop();
           }
 
@@ -60,18 +63,18 @@ const productSlice = createSlice({
         }
 
         productLength = state.products.length;
-        missingNumber = productLength % 4;
+        missingNumber = productLength % numColumns;
 
         if (missingNumber)
-          for (let index = 0; index < missingNumber; index++) {
+          for (let index = 0; index <= missingNumber; index++) {
             state.products.push({
               id: (state.products[productLength - 1].id ?? 1) + 1,
               hidden: true,
             });
           }
 
-        state.loading = false;
         state.hasNext = action.payload.total > action.payload.skip + pageSize;
+        state.loading = false;
       },
     );
     builder.addCase(fetchProducts.pending, (state) => {
