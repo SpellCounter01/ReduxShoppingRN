@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import FilterReducer from "./filter/filtersSlice";
 import ProductReducer from "./product/productSlice";
+import SizeReducer from "./sizes/SizesSlice";
 import { apiSlice } from "./api";
 
 export const store = () =>
@@ -8,6 +9,7 @@ export const store = () =>
     reducer: {
       product: ProductReducer,
       filter: FilterReducer,
+      sizes: SizeReducer,
       [apiSlice.reducerPath]: apiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>

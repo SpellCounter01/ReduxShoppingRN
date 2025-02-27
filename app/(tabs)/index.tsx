@@ -3,23 +3,24 @@ import ProductFiltersHeader from "@/components/ProductFiltersHeader";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { AppDispatch, RootState } from "@/store";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Product } from "@/interfaces/product";
 import {
   FlatList,
   Image,
   Dimensions,
-  ScaledSize,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "@/store/product/productSlice";
+import { generateEmptyElements, getNumColumns } from "@/utils/function";
+import { setColumnNumber } from "@/store/sizes/SizesSlice";
 
 export default function HomeScreen() {
-  const [numColumns, setNumColumns] = useState(getNumColumns(Dimensions.get('window')));
   const insets = useSafeAreaInsets()
   const { products, hasNext, currentPage, loading } = useSelector((state: RootState) => state.product)
+  const { numColumns } = useSelector((state: RootState) => state.sizes)
   const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
-    const subscription = Dimensions.addEventListener("change", (size) => setNumColumns(getNumColumns(size.window)));
+    const subscription = Dimensions.addEventListener("change", (size) => dispatch(setColumnNumber(getNumColumns(size.window))));
 
     return () => subscription.remove();
   }, []);
@@ -55,11 +56,11 @@ export default function HomeScreen() {
         bounces={false}
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={{ gap: 10 }}
-        data={products}
+        data={products != undefined ? generateEmptyElements(products, numColumns) : products}
         renderItem={({ item }) => {
           if (!item.hidden)
             return <ProductCard item={item as Product} />
-          else return <View style={{ flex: 1 }} />;
+          else return <View style={{ flex: 1, padding: 16 }} />;
         }}
         ListEmptyComponent={emptyComponent}
         keyExtractor={(item) => (item?.id ?? 1).toString()}
@@ -90,13 +91,3 @@ const emptyComponent = () => {
     </ThemedView>
   );
 };
-
-export const getNumColumns = (result: ScaledSize) => {
-  const division = result.width / 1000;
-
-  if (division >= 1.2)
-    return 4
-  else if (division >= 0.8) return 3
-  else return 2
-}
-

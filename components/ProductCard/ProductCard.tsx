@@ -8,16 +8,16 @@ import StarRating from "../StarRating";
 const ProductCard = ({ item }: { item: Product }) => {
   const theme = useColorScheme();
 
-  const colors = {
-    background: {
-      light: theme === "dark" ? "#000000" : "#c1c1c1",
-      dark: theme === "dark" ? "#000000" : "#c1c1c1",
-    },
-    text: {
-      light: theme !== "dark" ? "#000000" : "#ffffff",
-      dark: theme !== "dark" ? "#000000" : "#ffffff",
-    },
-  };
+  //const colors = {
+  //  background: {
+  //    light: theme === "dark" ? "#000000" : "#c1c1c1",
+  //    dark: theme === "dark" ? "#000000" : "#c1c1c1",
+  //  },
+  //  text: {
+  //    light: theme !== "dark" ? "#000000" : "#ffffff",
+  //    dark: theme !== "dark" ? "#000000" : "#ffffff",
+  //  },
+  //};
 
   const cachedMediaQueries = useRef<{ [key: string]: { [key: string]: ViewStyle | TextStyle } }>({});
 
@@ -33,8 +33,7 @@ const ProductCard = ({ item }: { item: Product }) => {
   return (
     <ThemedView
       style={styles.container}
-      lightColor={colors.background.light}
-      darkColor={colors.background.dark}
+      darkBackground
       key={item.id}>
       <View>
         <Image
@@ -43,30 +42,26 @@ const ProductCard = ({ item }: { item: Product }) => {
           resizeMode="contain"
         />
         {item.discountPercentage &&
-          <ThemedText lightColor={colors.text.light} darkColor={colors.text.dark} style={styles.discountText}>
+          <ThemedText style={styles.discountText}>
             {item.discountPercentage}%
           </ThemedText>
         }
       </View>
       <ThemedView
-        style={{ flex: 1, gap: 10 }}
-        lightColor={colors.background.light}
-        darkColor={colors.background.dark}>
+        style={{ flex: 1, gap: 10, backgroundColor: 'transparent' }}>
         <ThemedText
-          lightColor={colors.text.light}
-          darkColor={colors.text.dark}
           type="subtitle"
           style={{ fontSize: 18, flex: 1 }}>
           {item.title}
         </ThemedText>
         <View style={[styles.subInfoContainer, mediaQueries.subInfoContainer as ViewStyle]}>
-          <ThemedText style={{ flex: 1, fontSize: 14 }} lightColor={colors.text.light} darkColor={colors.text.dark}>
+          <ThemedText style={{ flex: 1, fontSize: 14 }} >
             {item.price}€
           </ThemedText>
-          <StarRating count={item.reviews.length} rating={item.rating} />
+          <StarRating rating={item.rating} count={item.reviews.length} />
         </View>
       </ThemedView>
-    </ThemedView>
+    </ThemedView >
   );
 };
 
@@ -78,7 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   discountText: {
-    backgroundColor: "red",
+    backgroundColor: "#212930",
     width: "auto",
     alignSelf: "flex-start",
     paddingHorizontal: 8,
